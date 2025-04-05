@@ -2,66 +2,128 @@
 .workout-list {
     max-width: 800px;
     margin: 20px auto;
+    padding: 0 15px;
+  }
+  
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
   }
   
   .workout-list h2 {
     color: #2c3e50;
-    margin-bottom: 20px;
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .filter-controls label {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+  }
+  
+  .intensity-filter {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
   }
   
   .empty-message {
     text-align: center;
     color: #7f8c8d;
-    padding: 20px;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 8px;
   }
   
   .workout-item {
     background: white;
     border-radius: 8px;
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-  }
-  
-  .workout-item:hover {
-    transform: translateY(-3px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
   }
   
   .workout-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .workout-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+  }
+  
+  .intensity-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   
   .intensity-dot {
-    display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    margin-left: 10px;
+    display: inline-block;
+  }
+  
+  .intensity-label {
+    text-transform: capitalize;
+    font-size: 0.85rem;
+    color: #7f8c8d;
   }
   
   .workout-details {
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
+    margin: 15px 0;
+  }
+  
+  .detail-group {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .detail-label {
+    font-weight: 600;
     color: #7f8c8d;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+  }
+  
+  .detail-value {
+    color: #2c3e50;
+    font-size: 0.85rem;
   }
   
   .workout-actions {
     display: flex;
     gap: 10px;
-    margin-top: 15px;
+    justify-content: flex-end;
   }
   
   .edit-btn, .delete-btn {
-    padding: 5px 10px;
+    padding: 8px 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
   }
   
   .edit-btn {
@@ -80,4 +142,21 @@
   
   .delete-btn:hover {
     background: #c0392b;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .list-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .workout-details {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .workout-actions {
+      justify-content: flex-start;
+    }
   }
