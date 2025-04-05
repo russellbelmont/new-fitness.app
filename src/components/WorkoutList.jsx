@@ -1,6 +1,17 @@
+import { useState, useEffect } from 'react';
 import './WorkoutList.css';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function WorkoutList({ workouts, onDelete, onEdit }) {
+  const [filter, setFilter] = useState('all');
+  const [sortedWorkouts, setSortedWorkouts] = useState([]);
+
+  // Sort workouts by date (newest first)
+  useEffect(() => {
+    const sorted = [...workouts].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setSortedWorkouts(sorted);
+  }, [workouts]);
+
   const getIntensityColor = (intensity) => {
     switch (intensity) {
       case 'high': return '#ff6b6b';
@@ -10,38 +21,100 @@ export default function WorkoutList({ workouts, onDelete, onEdit }) {
     }
   };
 
+  const filteredWorkouts = sortedWorkouts.filter(workout => {
+    if (filter === 'all') return true;
+    return workout.intensity === filter;
+  });
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="workout-list">
-      <h2>Your Workouts</h2>
-      {workouts.length === 0 ? (
-        <p className="empty-message">No workouts logged yet.</p>
+      <div className="list-header">
+        <h2>Your Workouts</h2>
+        <div className="filter-controls">
+          <label>Filter by Intensity:</label>
+          <select 
+            value={filter} 
+            onChange={(e) => setFilter(e.target.value)}
+            className="intensity-filter"
+          >
+            <option value="all">All</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+
+      {filteredWorkouts.length === 0 ? (
+        <motion.p 
+          className="empty-message"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          {workouts.length === 0 
+            ? 'No workouts logged yet. Add your first workout!' 
+            : 'No workouts match your filter criteria.'}
+        </motion.p>
       ) : (
-        <ul>
-          {workouts.map((workout, index) => (
-            <li key={index} className="workout-item">
+        <AnimatePresence>
+          {filteredWorkouts.map((workout) => (
+            <motion.div
+              key={workout.id}
+              className="workout-item"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.3 }}
+              layout
+            >
               <div className="workout-header">
                 <h3>{workout.exercise}</h3>
-                <span 
-                  className="intensity-dot" 
-                  style={{ backgroundColor: getIntensityColor(workout.intensity) }}
-                  title={workout.intensity}
-                ></span>
+                <div className="intensity-indicator">
+                  <span 
+                    className="intensity-dot" 
+                    style={{ backgroundColor: getIntensityColor(workout.intensity) }}
+                  />
+                  <span className="intensity-label">{workout.intensity}</span>
+                </div>
               </div>
+              
               <div className="workout-details">
-                <span>{workout.duration} minutes</span>
-                <span>{workout.date}</span>
+                <div className="detail-group">
+                  <span className="detail-label">Duration:</span>
+                  <span className="detail-value">{workout.duration} mins</span>
+                </div>
+                <div className="detail-group">
+                  <span className="detail-label">Date:</span>
+                  <span className="detail-value">{formatDate(workout.date)}</span>
+                </div>
               </div>
+
               <div className="workout-actions">
-                <button onClick={() => onEdit(index)} className="edit-btn">
+                <motion.button
+                  className="edit-btn"
+                  onClick={() => onEdit(workout.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   Edit
-                </button>
-                <button onClick={() => onDelete(index)} className="delete-btn">
+                </motion.button>
+                <motion.button
+                  className="delete-btn"
+                  onClick={() => onDelete(workout.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   Delete
-                </button>
+                </motion.button>
               </div>
-            </li>
+            </motion.div>
           ))}
-        </ul>
+        </AnimatePresence>
       )}
     </div>
   );
